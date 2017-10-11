@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <link rel="stylesheet" type="text/css" href="_card.css" />
+    <style>
+        body {
+            margin: 10mm;\n" +
+        }
+
+        table.page {
+            border: 0mm;
+            page-break-after: always;
+            border-spacing: 0;
+            border-collapse: collapse;
+            display:block;
+            clear: both;
+        }
+
+        table.page td {
+            padding: 0;
+        }
+    </style>
+    </head>
+    <body>
+        <table class="page">
+            {%- for card_group in cards_grouped %}
+                <tr>
+                {%-  for card in card_group %}
+                    <td>
+                        {{ card }}
+                    </td>
+                {%- endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    </body>
+</html>
