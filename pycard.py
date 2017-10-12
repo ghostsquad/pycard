@@ -1,15 +1,16 @@
 from jinja2 import Template
 import os
 import sys
-import time
+from optparse import OptionParser
 import logging
 import csv
 from watchdog.observers import Observer
 from watchdog.events import LoggingEventHandler, FileSystemEventHandler
 from itertools import zip_longest
-from livereload import Server, shell
+from livereload import Server
 
-csv.register_dialect('pipes', delimiter='|')
+
+VERSION = '0.1.0'
 
 RENDERED_CARDS_FILE = "index.html"
 
@@ -20,15 +21,15 @@ def grouper(iterable, n, fillvalue=None):
 
 
 class CardRenderer:
-    def __init__(self, input_path):
-        self.single_card_template_path = os.path.join(input_path, "_card.html.jinja2")
-        self.csv_card_path = os.path.join(input_path, "_card.csv")
+    def __init__(self, input_path, prefix):
+        self.single_card_template_path = os.path.join(input_path, "{}.html.jinja2".format(prefix))
+        self.csv_card_path = os.path.join(input_path, "{}.csv".format(prefix))
         self.cards_template_path = os.path.join(os.path.dirname(__file__), 'cards.html.jinja2')
         self.all_cards_rendered_path = os.path.join(input_path, RENDERED_CARDS_FILE)
 
     def render_cards(self):
         # load the csv file
-        cards_data = csv.DictReader(open(self.csv_card_path), dialect='pipes')
+        cards_data = csv.DictReader(open(self.csv_card_path), dialect='custom_delimiter')
 
         rendered_cards = []
 
@@ -62,24 +63,64 @@ class RenderingEventHandler(FileSystemEventHandler):
         self.card_renderer.render_cards()
 
 
+def parse_options():
+    parser = OptionParser(
+        usage="usage: %prog [options]",
+        version="%prog {}".format(VERSION)
+    )
+    parser.add_option("-p", "--path",
+                      help="path to assets",
+                      dest="path",
+                      default=os.getcwd(),
+                      metavar="PATH")
+
+    parser.add_option("-x", "--prefix",
+                      help="filename prefix, example _card<.ext>",
+                      dest="prefix",
+                      default="_card",
+                      metavar="PREFIX")
+
+    parser.add_option("-d", "--delimiter",
+                      help="delimiter used in the csv file, default: , (comma)",
+                      dest="delimiter",
+                      default=",",
+                      metavar="DELIMITER")
+
+    parser.add_option("--port",
+                      help="port to use for live reloaded page",
+                      dest="port",
+                      type="int",
+                      default=8800,
+                      metavar="PORT")
+
+    return parser.parse_args()
+
+
 def main():
     logging.basicConfig(level=logging.INFO,
                         format='%(asctime)s - %(message)s',
                         datefmt='%Y-%m-%d %H:%M:%S')
-    path = sys.argv[1] if len(sys.argv) > 1 else '.'
 
-    card_renderer = CardRenderer(path)
+    (options, args) = parse_options()
+
+    port = options.port
+    assets_path = options.path
+    file_prefix = options.prefix
+
+    csv.register_dialect('custom_delimiter', delimiter=options.delimiter)
+
+    card_renderer = CardRenderer(assets_path, file_prefix)
 
     observer = Observer()
-    observer.schedule(LoggingEventHandler(), path, recursive=True)
-    observer.schedule(RenderingEventHandler(card_renderer), path, recursive=True)
+    observer.schedule(LoggingEventHandler(), assets_path, recursive=True)
+    observer.schedule(RenderingEventHandler(card_renderer), assets_path, recursive=True)
     observer.start()
 
     card_renderer.render_cards()
 
     server = Server()
-    server.watch(os.path.join(path, RENDERED_CARDS_FILE))
-    server.serve(root=path)
+    server.watch(os.path.join(assets_path, RENDERED_CARDS_FILE))
+    server.serve(root=assets_path, port=port)
 
     observer.stop()
     observer.join()
