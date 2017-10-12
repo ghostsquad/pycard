@@ -1,5 +1,5 @@
 # pycard
-Opinionated card game prototyping engine
+Un-opinionated card game prototyping engine
 
 Generate printable cards for prototyping using csv, html, css.
 
