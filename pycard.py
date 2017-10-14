@@ -124,7 +124,7 @@ def main():
     card_renderer.render_cards()
 
     server = Server()
-    server.watch(os.path.join(assets_path, RENDERED_CARDS_FILE))
+    server.watch(card_renderer.all_cards_rendered_path)
     server.serve(root=assets_path, port=port)
 
     observer.stop()
