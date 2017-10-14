@@ -1,6 +1,5 @@
 from jinja2 import Template
 import os
-import sys
 from optparse import OptionParser
 import logging
 import csv
@@ -22,6 +21,8 @@ def grouper(iterable, n, fillvalue=None):
 
 class CardRenderer:
     def __init__(self, input_path, prefix):
+        self.prefix = prefix
+
         self.single_card_template_path = os.path.join(input_path, "{}.html.jinja2".format(prefix))
         self.csv_card_path = os.path.join(input_path, "{}.csv".format(prefix))
         self.cards_template_path = os.path.join(os.path.dirname(__file__), 'cards.html.jinja2')
@@ -29,7 +30,11 @@ class CardRenderer:
 
     def render_cards(self):
         # load the csv file
-        cards_data = csv.DictReader(open(self.csv_card_path), dialect='custom_delimiter')
+        cards_data = []
+        with open(self.csv_card_path, "r", encoding='utf-8-sig') as csvfile:
+            reader = csv.DictReader(csvfile, dialect='custom_delimiter')
+            for row in reader:
+                cards_data.append(row)
 
         rendered_cards = []
 
@@ -49,7 +54,7 @@ class CardRenderer:
             template = Template(cards_template_file.read())
 
             with open(self.all_cards_rendered_path, "w") as all_cards_rendered_file:
-                all_cards_rendered_file.write(template.render(cards_grouped=cards_grouped))
+                all_cards_rendered_file.write(template.render(cards_grouped=cards_grouped, prefix=self.prefix))
 
 
 class RenderingEventHandler(FileSystemEventHandler):
