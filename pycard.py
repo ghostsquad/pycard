@@ -3,6 +3,7 @@ import os
 from optparse import OptionParser
 import logging
 import csv
+import time
 from watchdog.observers import Observer
 from watchdog.events import LoggingEventHandler, FileSystemEventHandler
 from itertools import zip_longest
@@ -29,6 +30,11 @@ class CardRenderer:
         self.all_cards_rendered_path = os.path.join(input_path, RENDERED_CARDS_FILE)
 
     def render_cards(self):
+        # I've noticed that when saving the CSV file
+        # the server reloads an empty page
+        # unless I add a small sleep before attempting to read everything
+        time.sleep(0.5)
+
         # load the csv file
         cards_data = []
         with open(self.csv_card_path, "r", encoding='utf-8-sig') as csvfile:
@@ -52,7 +58,6 @@ class CardRenderer:
         # render the cards template with all rendered cards
         with open(self.cards_template_path, "r") as cards_template_file:
             template = Template(cards_template_file.read())
-
             with open(self.all_cards_rendered_path, "w") as all_cards_rendered_file:
                 all_cards_rendered_file.write(template.render(cards_grouped=cards_grouped, prefix=self.prefix))
 
@@ -119,9 +124,10 @@ def main():
     observer = Observer()
     observer.schedule(LoggingEventHandler(), assets_path, recursive=True)
     observer.schedule(RenderingEventHandler(card_renderer), assets_path, recursive=True)
-    observer.start()
 
     card_renderer.render_cards()
+
+    observer.start()
 
     server = Server()
     server.watch(card_renderer.all_cards_rendered_path)
