@@ -18,6 +18,18 @@ pip install -r requirements.txt
 python pycard.py -p ./examples -d "|"
 ```
 
+OR
+
+```
+docker run -p 8800:80 ghostsquad/pycard pycard -p ./examples -d "|"
+```
+
+Running the Docker container with your own data (comma separated csv)
+
+```
+docker run -p80 -v /path/to/your/card_files:/data ghostsquad/pycard pycard -p /data -d ","
+```
+
 Example output
 
 ```

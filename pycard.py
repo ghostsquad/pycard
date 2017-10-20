@@ -131,7 +131,7 @@ def main():
 
     server = Server()
     server.watch(card_renderer.all_cards_rendered_path)
-    server.serve(root=assets_path, port=port)
+    server.serve(root=assets_path, port=port, host='0.0.0.0')
 
     observer.stop()
     observer.join()
