@@ -9,17 +9,25 @@
         <meta http-equiv="pragma" content="no-cache" />
         <link rel="stylesheet" type="text/css" href="{{prefix}}.css" />
     <style>
-        body {
-            margin: 10mm;
+        body, html {
+            margin: 0;
+            padding: 0;
         }
 
         table.page {
-            border: 0mm;
+            border: 0;
             page-break-after: always;
             border-spacing: 0;
             border-collapse: collapse;
             display:block;
             clear: both;
+            margin: 5mm;
+            page-break-inside:auto;
+        }
+
+        table.page tr {
+            page-break-inside:avoid;
+            page-break-after:auto
         }
 
         table.page td {
