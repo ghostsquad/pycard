@@ -4,6 +4,7 @@ from optparse import OptionParser
 import logging
 import csv
 import time
+import re
 from watchdog.observers import Observer
 from watchdog.events import LoggingEventHandler, FileSystemEventHandler
 from itertools import zip_longest
@@ -50,7 +51,14 @@ class CardRenderer:
 
             # render the template with card data
             for card_data in cards_data:
-                rendered_cards.append(template.render(card_data))
+                rendered = template.render(card_data)
+                num_cards = card_data.get('num_cards', 1)
+                if num_cards is None or re.match("^[^0-9]*$", num_cards):
+                    num_cards = 1
+
+                num_cards = int(num_cards)
+                for i in range(0, int(num_cards)):
+                    rendered_cards.append(rendered)
 
         # group cards into columns of 4
         cards_grouped = grouper(rendered_cards, 4)

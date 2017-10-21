@@ -64,10 +64,17 @@ Note: You can change the prefix with the `-x` or `--prefix` commandline option. 
 
 ```diff
 - Important
-index.html file is created/overwritten in the assets path! You'll need to add that to .gitignore if using git
+index.html file is created/overwritten in the assets path!
 ```
 
 * `_card.csv` is your data. Column names become variables to be used in `_card.html.jinja2`
+
+    * `num_cards` is a special column name. You can use this to indicate how many copies of a particular card will be rendered.
+
+      When this column is missing or has a non-numeric value, it defaults to 1 card.
+      Using 0 is the column will cause the card not to be rendered.
+      This is useful if you have a card idea, but aren't ready yet to print it for prototyping.
+
 * `_card.css` is your styling. This will be automatically loaded. As your cards will be printed, be careful to use physical units (mm, pt...) instead of pixels to define dimensions.
 * `_card.html.jinja2` will be your html template. See [Jinja Documentation](http://jinja.pocoo.org/docs/2.9/templates/) for details.
 
