@@ -17,8 +17,6 @@ _Only tested in Python 3.6_
 
 <img src="https://user-images.githubusercontent.com/903488/31864438-4419b710-b712-11e7-8c3a-9c823c6e57da.png" alt="works on linux" width="75px">
 
-<br />
-
 ###  Quick Start
 
 ```
