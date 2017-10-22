@@ -25,6 +25,7 @@ class CardRenderer:
     def __init__(self, input_path, prefix):
         self.prefix = prefix
 
+        self.custom_header_path = os.path.join(input_path, "{}.header.html".format(prefix))
         self.single_card_template_path = os.path.join(input_path, "{}.html.jinja2".format(prefix))
         self.csv_card_path = os.path.join(input_path, "{}.csv".format(prefix))
         self.cards_template_path = os.path.join(os.path.dirname(__file__), 'cards.html.jinja2')
@@ -45,14 +46,23 @@ class CardRenderer:
 
         rendered_cards = []
 
+        custom_header = None
+
+        if os.path.exists(self.custom_header_path):
+            with open(self.custom_header_path, "r") as f:
+                custom_header = f.read()
+
         # load the single card template
         with open(self.single_card_template_path, "r") as template_file:
             template = Template(template_file.read())
 
             # render the template with card data
             for card_data in cards_data:
+                if str(card_data.get('ignore', "false")).lower() == "true":
+                    continue
+
                 rendered = template.render(card_data)
-                num_cards = card_data.get('num_cards', 1)
+                num_cards = card_data.get('num_cards')
                 if num_cards is None or re.match("^[^0-9]*$", num_cards):
                     num_cards = 1
 
@@ -67,7 +77,13 @@ class CardRenderer:
         with open(self.cards_template_path, "r") as cards_template_file:
             template = Template(cards_template_file.read())
             with open(self.all_cards_rendered_path, "w") as all_cards_rendered_file:
-                all_cards_rendered_file.write(template.render(cards_grouped=cards_grouped, prefix=self.prefix))
+                all_cards_rendered_file.write(
+                    template.render(
+                        cards_grouped=cards_grouped,
+                        prefix=self.prefix,
+                        custom_header=custom_header
+                    )
+                )
 
 
 class RenderingEventHandler(FileSystemEventHandler):

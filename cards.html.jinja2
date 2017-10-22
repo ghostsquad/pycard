@@ -8,6 +8,7 @@
         <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
         <meta http-equiv="pragma" content="no-cache" />
         <link rel="stylesheet" type="text/css" href="{{prefix}}.css" />
+        {%- if custom_header %}{{ custom_header }}{% endif %}
     <style>
         body, html {
             margin: 0;

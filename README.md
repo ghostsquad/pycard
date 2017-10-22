@@ -62,6 +62,10 @@ examples
 ```
 Note: You can change the prefix with the `-x` or `--prefix` commandline option. Default is `_card`.
 
+Optional files:
+
+* `_card.header.html` - Add custom header to the final index.html file.
+
 ```diff
 - Important
 index.html file is created/overwritten in the assets path!
@@ -74,6 +78,9 @@ index.html file is created/overwritten in the assets path!
       When this column is missing or has a non-numeric value, it defaults to 1 card.
       Using 0 is the column will cause the card not to be rendered.
       This is useful if you have a card idea, but aren't ready yet to print it for prototyping.
+
+    * `ignore` is a special column name. You can use this to prevent a row from being rendered.
+      I've found this useful to ignore the row with card count sums.
 
 * `_card.css` is your styling. This will be automatically loaded. As your cards will be printed, be careful to use physical units (mm, pt...) instead of pixels to define dimensions.
 * `_card.html.jinja2` will be your html template. See [Jinja Documentation](http://jinja.pocoo.org/docs/2.9/templates/) for details.
