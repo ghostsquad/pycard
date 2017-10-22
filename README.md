@@ -60,26 +60,18 @@ See `examples` directory to setup your files
 
 ### Explanation
 
-Required files in a directory:
+#### Files Explained
 
-```
-examples
-├── _card.css
-├── _card.csv
-├── _card.html.jinja2
-```
-Note: You can change the prefix with the `-x` or `--prefix` commandline option. Default is `_card`.
-
-Optional files:
-
-* `_card.header.html` - Add custom header to the final index.html file.
+These files should be in the directory specified by `-p` or `--path` option
 
 ```diff
 - Important
 index.html file is created/overwritten in the assets path!
 ```
 
-* `_card.csv` is your data. Column names become variables to be used in `_card.html.jinja2`
+Note: You can change the prefix with the `-x` or `--prefix` commandline option. Default is `_card`.
+
+* `_card.csv` - **[Required]** is your data. Column names become variables to be used in `_card.html.jinja2`
 
     * `num_cards` is a special column name. You can use this to indicate how many copies of a particular card will be rendered.
 
@@ -90,8 +82,9 @@ index.html file is created/overwritten in the assets path!
     * `ignore` is a special column name. You can use this to prevent a row from being rendered.
       I've found this useful to ignore the row with card count sums.
 
-* `_card.css` is your styling. This will be automatically loaded. As your cards will be printed, be careful to use physical units (mm, pt...) instead of pixels to define dimensions.
-* `_card.html.jinja2` will be your html template. See [Jinja Documentation](http://jinja.pocoo.org/docs/2.9/templates/) for details.
+* `_card.css` - **[Required]** is your styling. This will be automatically loaded. As your cards will be printed, be careful to use physical units (mm, pt...) instead of pixels to define dimensions.
+* `_card.html.jinja2` - **[Required]** will be your html template. See [Jinja Documentation](http://jinja.pocoo.org/docs/2.9/templates/) for details.
+* `_card.header.html` - _[Optional]_ Add custom header to the final `index.html` file.
 
 The page found at localhost:8800 is now printable!
 
