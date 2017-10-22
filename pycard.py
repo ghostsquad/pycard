@@ -19,12 +19,18 @@ RENDERED_CARDS_FILE = "index.html"
 class CardRenderer:
     def __init__(self, input_path, prefix):
         self.prefix = prefix
+        self.input_path = input_path
 
-        self.custom_header_path = os.path.join(input_path, "{}.header.html".format(prefix))
-        self.single_card_template_path = os.path.join(input_path, "{}.html.jinja2".format(prefix))
-        self.csv_card_path = os.path.join(input_path, "{}.csv".format(prefix))
+        self.csv_card_path = self.get_path("csv")
+        self.custom_header_path = self.get_path("header.html")
+        self.single_card_template_path = self.get_path("html.jinja2")
+
         self.cards_template_path = os.path.join(os.path.dirname(__file__), 'cards.html.jinja2')
+
         self.all_cards_rendered_path = os.path.join(input_path, RENDERED_CARDS_FILE)
+
+    def get_path(self, extension):
+        return os.path.join(self.input_path, "{}.{}".format(self.prefix, extension))
 
     def render_cards(self):
         # I've noticed that when saving the CSV file
@@ -41,12 +47,6 @@ class CardRenderer:
 
         rendered_cards = []
 
-        custom_header = None
-
-        if os.path.exists(self.custom_header_path):
-            with open(self.custom_header_path, "r") as f:
-                custom_header = f.read()
-
         # load the single card template
         with open(self.single_card_template_path, "r") as template_file:
             template = Template(template_file.read())
@@ -56,7 +56,7 @@ class CardRenderer:
                 if str(card_data.get('ignore', "false")).lower() == "true":
                     continue
 
-                rendered = template.render(card_data)
+                rendered = template.render(card_data, __card_data=card_data)
                 num_cards = card_data.get('num_cards')
                 if num_cards is None or re.match("^[^0-9]*$", num_cards):
                     num_cards = 1
@@ -64,6 +64,13 @@ class CardRenderer:
                 num_cards = int(num_cards)
                 for i in range(0, int(num_cards)):
                     rendered_cards.append(rendered)
+
+        # Load custom header html if it exists
+        custom_header = None
+
+        if os.path.exists(self.custom_header_path):
+            with open(self.custom_header_path, "r") as f:
+                custom_header = f.read()
 
         # render the cards template with all rendered cards
         with open(self.cards_template_path, "r") as cards_template_file:
