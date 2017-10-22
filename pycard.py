@@ -119,6 +119,12 @@ def parse_options():
                       default=8800,
                       metavar="PORT")
 
+    parser.add_option("--address",
+                      help="host address to bind to",
+                      dest="host_address",
+                      default="0.0.0.0",
+                      metavar="ADDRESS")
+
     return parser.parse_args()
 
 
@@ -132,6 +138,7 @@ def main():
     port = options.port
     assets_path = options.path
     file_prefix = options.prefix
+    host_address = options.host_address
 
     csv.register_dialect('custom_delimiter', delimiter=options.delimiter)
 
@@ -147,7 +154,7 @@ def main():
 
     server = Server()
     server.watch(card_renderer.all_cards_rendered_path)
-    server.serve(root=assets_path, port=port, host='0.0.0.0')
+    server.serve(root=assets_path, port=port, host=host_address)
 
     observer.stop()
     observer.join()
