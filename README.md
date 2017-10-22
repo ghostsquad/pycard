@@ -9,6 +9,16 @@ Generate printable cards for prototyping using csv, html, css.
 
 _Only tested in Python 3.6_
 
+<img src="https://user-images.githubusercontent.com/903488/31864446-602639ec-b712-11e7-84d5-70424943deac.png" alt="works on python 3.6" width="100px" align="left">
+
+<img src="https://user-images.githubusercontent.com/903488/31864552-b1f87716-b713-11e7-9978-fc4109fbe66f.png" alt="works on windows" width="165px" align="left">
+
+<img src="https://user-images.githubusercontent.com/903488/31864413-d8e8e11e-b711-11e7-930a-0eab31a97848.png" alt="works on osx/mac" width="75px" align="left">
+
+<img src="https://user-images.githubusercontent.com/903488/31864438-4419b710-b712-11e7-8c3a-9c823c6e57da.png" alt="works on linux" width="75px">
+
+<br />
+
 ###  Quick Start
 
 ```
