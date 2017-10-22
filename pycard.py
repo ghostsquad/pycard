@@ -16,11 +16,6 @@ VERSION = '0.1.0'
 RENDERED_CARDS_FILE = "index.html"
 
 
-def grouper(iterable, n, fillvalue=None):
-    args = [iter(iterable)] * n
-    return zip_longest(*args, fillvalue=fillvalue)
-
-
 class CardRenderer:
     def __init__(self, input_path, prefix):
         self.prefix = prefix
@@ -70,16 +65,13 @@ class CardRenderer:
                 for i in range(0, int(num_cards)):
                     rendered_cards.append(rendered)
 
-        # group cards into columns of 4
-        cards_grouped = grouper(rendered_cards, 4)
-
         # render the cards template with all rendered cards
         with open(self.cards_template_path, "r") as cards_template_file:
             template = Template(cards_template_file.read())
             with open(self.all_cards_rendered_path, "w") as all_cards_rendered_file:
                 all_cards_rendered_file.write(
                     template.render(
-                        cards_grouped=cards_grouped,
+                        rendered_cards=rendered_cards,
                         prefix=self.prefix,
                         custom_header=custom_header
                     )
