@@ -56,7 +56,11 @@ class CardRenderer:
                 if str(card_data.get('ignore', "false")).lower() == "true":
                     continue
 
-                rendered = template.render(card_data, __card_data=card_data)
+                rendered = template.render(
+                    card_data,
+                    __card_data=card_data,
+                    __time=str(time.time())
+                )
                 num_cards = card_data.get('num_cards')
                 if num_cards is None or re.match("^[^0-9]*$", num_cards):
                     num_cards = 1
