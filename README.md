@@ -84,11 +84,12 @@ Note: You can change the prefix with the `-x` or `--prefix` commandline option. 
 
 * `_card.css` - **[Required]** is your styling. This will be automatically loaded. As your cards will be printed, be careful to use physical units (mm, pt...) instead of pixels to define dimensions.
 * `_card.html.jinja2` - **[Required]** will be your html template. See [Jinja Documentation](http://jinja.pocoo.org/docs/2.9/templates/) for details.
-* `_card.header.html` - _[Optional]_ Add custom header to the final `index.html` file.
 
     * column headers are variables
     * `__card_data` is injected as a dictionary (usage: `{{ __card_data['foo'] }}` is the same as `{{ foo }}`
     * `__time` is injected to provide a way of preventing images from being cached. (usage: `my_image.png?{{ __time }}`
+
+* `_card.header.html` - _[Optional]_ Add custom header to the final `index.html` file.
 
 The page found at localhost:8800 is now printable!
 
