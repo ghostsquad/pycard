@@ -11,6 +11,14 @@ table.page, table.page td {
     border-radius: 3mm;
     width: 63mm;
     height: 88mm;
+
+    /* 
+     * This is important to ensure the entirety of the card,
+     * including border and padding are included in the final desired card width.
+     * https://developer.mozilla.org/en-US/docs/Web/CSS/box-sizing
+     * https://css-tricks.com/box-sizing/
+     */
+    box-sizing: border-box;
 }
 
 .avatar {
